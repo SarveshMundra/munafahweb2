@@ -94,11 +94,11 @@
 
     .heading-right {
         margin-top: auto;  /* Push to bottom */
-        margin-bottom: 3rem;  /* Space from bottom */
+        margin-bottom: 5px;  /* Space from bottom */
     }
 
     .heading-left, .heading-right {
         width: 90%;
-        padding: 1.5rem;
+        padding: .5rem;
     }
 }
