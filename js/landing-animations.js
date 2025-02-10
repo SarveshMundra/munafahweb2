@@ -109,7 +109,7 @@ function initFeaturesAnimations() {
         start: 'top top',   // When the top of features section hits the top of viewport
         end: '+=300%',    // ADJUST: Total scroll length
         pin: true,
-        markers: true,
+      //  markers: true,
         anticipatePin: 1
     });
 
@@ -257,9 +257,9 @@ function initCrossPlatformAnimations() {
 
 // Let's also add a check in the click handler
 function initFeatureListAnimations() {
-    const magicButtons = document.querySelectorAll('.magic-button');
+    const MagicButtons = document.querySelectorAll('.Magic-button');
     
-    magicButtons.forEach(button => {
+    MagicButtons.forEach(button => {
         button.addEventListener('click', () => {
             const card = button.closest('.feature-card');
             const featureList = card.querySelector('.feature-list');
@@ -278,7 +278,7 @@ function initFeatureListAnimations() {
                 animateFeatureReveal(card, button, featureList);
             } else {
                 button.classList.remove('active');
-                button.textContent = 'Magic';
+                button.textContent = 'Blast Me';
                 animateFeatureHide(card, button, featureList);
             }
         });
@@ -323,7 +323,7 @@ function animateFeatureReveal(card, button, featureList) {
         .to(circle, {
             scale: 20,
             opacity: 0,
-            duration: 0.5,
+            duration: .5,
             onComplete: () => {
                 circle.remove();
                 featureList.classList.add('visible');
@@ -334,15 +334,15 @@ function animateFeatureReveal(card, button, featureList) {
                 // First make feature list visible
                 listTimeline.to(featureList, {
                     opacity: 1,
-                    duration: 0.3
+                    duration: 0.2
                 });
                 
                 // Then animate list items
                 listTimeline.from(listItems, {
                     opacity: 0,
                     x: -50,
-                    stagger: 0.1,
-                    duration: 0.5,
+                    stagger: 0.05,
+                    duration: 0.3,
                     clearProps: "all"  // Clear properties after animation
                 });
             }
@@ -358,8 +358,8 @@ function animateFeatureHide(card, button, featureList) {
     const cardRect = card.getBoundingClientRect();
     circle.style.top = `${card.offsetHeight / 2}px`;
     circle.style.left = `${card.offsetWidth / 2}px`;
-    circle.style.transform = 'scale(20)';
-    circle.style.opacity = '0.3';
+    circle.style.transform = 'scale(50)';
+    circle.style.opacity = '0';
     
     // Hide list items first
     gsap.to(featureList.querySelectorAll('li'), {
@@ -378,14 +378,16 @@ function animateFeatureHide(card, button, featureList) {
             // Reverse circle animation
             gsap.timeline()
                 .to(circle, {
-                    opacity: 0.8,
-                    duration: 0.1
+                    opacity: 0.1,
+                    duration: .2
                 })
+
                 .to(circle, {
-                    top: `${buttonRect.top - cardRect.top + buttonRect.height/2}px`,
-                    left: `${buttonRect.left - cardRect.left + buttonRect.width/2}px`,
+                    top: `${buttonRect.top - cardRect.top + buttonRect.height / 2}px`,
+                    left: `${buttonRect.left - cardRect.left + buttonRect.width / 2}px`,
                     scale: 1,
-                    duration: 1,
+                    opacity: 1,
+                    duration: .7,
                     ease: "power2.inOut"
                 })
                 .to(circle, {
@@ -398,7 +400,7 @@ function animateFeatureHide(card, button, featureList) {
 }
 
 function resetCard(card) {
-    const button = card.querySelector('.magic-button');
+    const button = card.querySelector('.Magic-button');
     const featureList = card.querySelector('.feature-list');
     const circles = card.querySelectorAll('.animation-circle');
     
@@ -407,7 +409,7 @@ function resetCard(card) {
     
     // Reset button state
     button.classList.remove('active');
-    button.textContent = 'Magic';
+    button.textContent = 'Blast Me';
     
     // Reset feature list
     featureList.classList.remove('visible');
