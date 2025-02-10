@@ -13,6 +13,37 @@ html, body {
 
 }
 
+/* Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    z-index: 4;
+}
 
+.scroll-arrow {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e7e7e7;
+    border-left: 0;
+    border-top: 0;
+    animation: bounce 2s infinite;
+}
 
+/* Up Arrow */
+.scroll-indicator.up {
+    top: 40px;
+    bottom: auto;
+    transform: translateX(-50%);
+}
+
+.scroll-arrow.up {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e7e7e7;
+    border-right: 0;
+    border-bottom: 0;
+    transform: rotate(45deg);
+    animation: bounce 2s infinite;
+}
 

@@ -321,7 +321,7 @@ function animateFeatureReveal(card, button, featureList) {
             ease: "power2.inOut"
         })
         .to(circle, {
-            scale: 20,
+            scale: 60,
             opacity: 0,
             duration: .5,
             onComplete: () => {
@@ -358,7 +358,7 @@ function animateFeatureHide(card, button, featureList) {
     const cardRect = card.getBoundingClientRect();
     circle.style.top = `${card.offsetHeight / 2}px`;
     circle.style.left = `${card.offsetWidth / 2}px`;
-    circle.style.transform = 'scale(50)';
+    circle.style.transform = 'scale(100)';
     circle.style.opacity = '0';
     
     // Hide list items first
@@ -378,8 +378,9 @@ function animateFeatureHide(card, button, featureList) {
             // Reverse circle animation
             gsap.timeline()
                 .to(circle, {
-                    opacity: 0.1,
-                    duration: .2
+                    opacity: 0.5,
+                    duration: .5,
+                    scale: 5,
                 })
 
                 .to(circle, {
@@ -387,7 +388,7 @@ function animateFeatureHide(card, button, featureList) {
                     left: `${buttonRect.left - cardRect.left + buttonRect.width / 2}px`,
                     scale: 1,
                     opacity: 1,
-                    duration: .7,
+                    duration: .6,
                     ease: "power2.inOut"
                 })
                 .to(circle, {

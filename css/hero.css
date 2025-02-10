@@ -136,24 +136,6 @@
 }
 
 
-/* Scroll Indicator */
-.scroll-indicator {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 4;
-}
-
-.scroll-arrow {
-    width: 30px;
-    height: 30px;
-    border: 2px solid #4a5568;
-    border-left: 0;
-    border-top: 0;
-    transform: rotate(45deg);
-    animation: bounce 2s infinite;
-}
 
 /* Animations */
 @keyframes bounce {
