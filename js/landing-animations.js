@@ -1,5 +1,5 @@
 ﻿// Register GSAP ScrollTrigger Plugin
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);  
 
 const styleElement = document.createElement('style');
 styleElement.textContent = `
@@ -208,6 +208,7 @@ function initFeaturesAnimations() {
             });
         }
     });
+
 }
 
 // Animation Adjustment Guide:
@@ -256,6 +257,82 @@ function initCrossPlatformAnimations() {
 
 
 
+function initFeatureListAnimations() {
+    const magicButtons = document.querySelectorAll('.magic-button');
+    
+    magicButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.feature-card');
+            const featureList = card.querySelector('.feature-list');
+            
+            // Add active class to button
+            button.classList.add('active');
+            
+            // Create and animate the circle
+            animateFeatureReveal(card, button, featureList);
+        });
+    });
+}
+
+function animateFeatureReveal(card, button, featureList) {
+    // Create the traveling circle element
+    const circle = document.createElement('div');
+    circle.className = 'animation-circle';
+    card.appendChild(circle);
+    
+    // Get exact positions of elements relative to viewport
+    const buttonRect = button.getBoundingClientRect();
+    const listRect = featureList.getBoundingClientRect();
+    
+    // Position circle at button's location
+    // Subtract card's offset to make position relative to card
+    circle.style.top = `${buttonRect.top - card.offsetTop}px`;
+    circle.style.left = `${card.offsetWidth / 2}px`;  // Center horizontally
+    
+    // Create animation sequence using GSAP timeline
+    gsap.timeline()
+        // Step 1: Make circle visible
+        .to(circle, {
+            opacity: 1,
+            duration: 0.1
+        })
+        // Step 2: Move circle to feature list
+        // You can modify these values to change circle's path
+        .to(circle, {
+            top: card.offsetHeight / 2,  // Center Y
+            left: card.offsetWidth / 2,  // Center X
+            width: '50px',
+            height: '50px',
+            duration: 1.5,
+            ease: "power2.inOut"
+        })
+        // Step 3: Expand circle and fade out
+        .to(circle, {
+            scale: 20,  // How big circle gets during blast effect
+            opacity: 0,
+            duration: 0.5,  // Duration of blast effect
+            onComplete: () => {
+                // Clean up and show feature list
+                circle.remove();
+                featureList.classList.add('visible');
+                
+                // Animate list items appearing
+                gsap.from(featureList.querySelectorAll('li'), {
+                    opacity: 0,
+                    x: -50,  // Items slide in from left
+                    stagger: 0.1,  // Delay between each item
+                    duration: 0.5
+                });
+            }
+        });
+}
+
+
+
+
+
+
+
 // Initialize all animations when page loads
 document.addEventListener('DOMContentLoaded', () => {
     // Register GSAP ScrollTrigger Plugin
@@ -269,7 +346,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initFeaturesAnimations();
 
+    initFeatureListAnimations()
+    
     initCrossPlatformAnimations();
+
+
+
 });
 
 
@@ -277,6 +359,8 @@ document.addEventListener('DOMContentLoaded', () => {
 window.initHeroAnimations = initHeroAnimations;
 window.initFeaturesAnimations = initFeaturesAnimations;
 window.initCrossPlatformAnimations = initCrossPlatformAnimations;
+window.initFeatureListAnimations = initFeatureListAnimations;
+
 
 // Smooth scroll for navigation
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {

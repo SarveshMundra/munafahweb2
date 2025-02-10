@@ -102,3 +102,119 @@
         padding: .5rem;
     }
 }
+
+
+
+/* Add this to your features.css file */
+
+/* Magic Button Styles */
+.magic-button {
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    font-family: 'Zen Dots';
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 10;
+    transition: color 0.3s ease;
+}
+
+.magic-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: #00a8ff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+    z-index: -1;
+}
+
+.magic-button:hover::before,
+.magic-button.active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.magic-button:hover,
+.magic-button.active {
+    color: white;
+}
+
+/* Feature List Styles */
+.feature-list {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 5;
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.feature-list.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.feature-list-left,
+.feature-list-right {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2rem;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    width: 45%;
+}
+
+.feature-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    color: white;
+    font-family: 'Helvetica Neue', sans-serif;
+}
+
+.feature-list li {
+    margin: 10px 0;
+    padding: 8px;
+    border-left: 3px solid #00a8ff;
+    background: rgba(0, 168, 255, 0.1);
+}
+
+/* Animation Circle */
+.animation-circle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #00a8ff;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .feature-list {
+        flex-direction: column;
+        top: 15%;
+    }
+
+    .feature-list-left,
+    .feature-list-right {
+        width: 100%;
+    }
+}
