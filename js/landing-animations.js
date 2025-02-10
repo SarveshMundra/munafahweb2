@@ -255,8 +255,7 @@ function initCrossPlatformAnimations() {
 }
 
 
-
-
+// Let's also add a check in the click handler
 function initFeatureListAnimations() {
     const magicButtons = document.querySelectorAll('.magic-button');
     
@@ -265,67 +264,164 @@ function initFeatureListAnimations() {
             const card = button.closest('.feature-card');
             const featureList = card.querySelector('.feature-list');
             
-            // Add active class to button
-            button.classList.add('active');
+            // Debug log for feature list content
+            console.log('Feature List HTML:', featureList.innerHTML);
+            console.log('Feature List Structure:', {
+                childNodes: featureList.childNodes,
+                classList: featureList.classList,
+                style: featureList.style
+            });
             
-            // Create and animate the circle
-            animateFeatureReveal(card, button, featureList);
+            if (!button.classList.contains('active')) {
+                button.classList.add('active');
+                button.textContent = 'UNDO';
+                animateFeatureReveal(card, button, featureList);
+            } else {
+                button.classList.remove('active');
+                button.textContent = 'Magic';
+                animateFeatureHide(card, button, featureList);
+            }
         });
     });
 }
 
 function animateFeatureReveal(card, button, featureList) {
-    // Create the traveling circle element
+    // Reset all list items to initial state
+    const listItems = featureList.querySelectorAll('li');
+    gsap.set(listItems, {
+        opacity: 0,
+        x: -50,
+        clearProps: "all"  // Clear any lingering GSAP properties
+    });
+    
     const circle = document.createElement('div');
     circle.className = 'animation-circle';
     card.appendChild(circle);
     
-    // Get exact positions of elements relative to viewport
     const buttonRect = button.getBoundingClientRect();
-    const listRect = featureList.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    circle.style.top = `${buttonRect.top - cardRect.top + buttonRect.height/2}px`;
+    circle.style.left = `${buttonRect.left - cardRect.left + buttonRect.width/2}px`;
     
-    // Position circle at button's location
-    // Subtract card's offset to make position relative to card
-    circle.style.top = `${buttonRect.top - card.offsetTop}px`;
-    circle.style.left = `${card.offsetWidth / 2}px`;  // Center horizontally
+    // Reset and show feature list
+    featureList.style.display = 'flex';
+    featureList.style.visibility = 'visible';
+    featureList.style.opacity = '0';
     
-    // Create animation sequence using GSAP timeline
     gsap.timeline()
-        // Step 1: Make circle visible
         .to(circle, {
             opacity: 1,
             duration: 0.1
         })
-        // Step 2: Move circle to feature list
-        // You can modify these values to change circle's path
         .to(circle, {
-            top: card.offsetHeight / 2,  // Center Y
-            left: card.offsetWidth / 2,  // Center X
-            width: '50px',
-            height: '50px',
-            duration: 1.5,
+            top: card.offsetHeight / 2,
+            width: '30px',
+            height: '30px',
+            duration: 1,
             ease: "power2.inOut"
         })
-        // Step 3: Expand circle and fade out
         .to(circle, {
-            scale: 20,  // How big circle gets during blast effect
+            scale: 20,
             opacity: 0,
-            duration: 0.5,  // Duration of blast effect
+            duration: 0.5,
             onComplete: () => {
-                // Clean up and show feature list
                 circle.remove();
                 featureList.classList.add('visible');
                 
-                // Animate list items appearing
-                gsap.from(featureList.querySelectorAll('li'), {
+                // Create new timeline for list animation
+                const listTimeline = gsap.timeline();
+                
+                // First make feature list visible
+                listTimeline.to(featureList, {
+                    opacity: 1,
+                    duration: 0.3
+                });
+                
+                // Then animate list items
+                listTimeline.from(listItems, {
                     opacity: 0,
-                    x: -50,  // Items slide in from left
-                    stagger: 0.1,  // Delay between each item
-                    duration: 0.5
+                    x: -50,
+                    stagger: 0.1,
+                    duration: 0.5,
+                    clearProps: "all"  // Clear properties after animation
                 });
             }
         });
 }
+
+function animateFeatureHide(card, button, featureList) {
+    const circle = document.createElement('div');
+    circle.className = 'animation-circle';
+    card.appendChild(circle);
+    
+    const buttonRect = button.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    circle.style.top = `${card.offsetHeight / 2}px`;
+    circle.style.left = `${card.offsetWidth / 2}px`;
+    circle.style.transform = 'scale(20)';
+    circle.style.opacity = '0.3';
+    
+    // Hide list items first
+    gsap.to(featureList.querySelectorAll('li'), {
+        opacity: 0,
+        x: 50,
+        duration: 0.7,
+        onComplete: () => {
+            featureList.classList.remove('visible');
+            featureList.style.display = 'none';
+            
+            // Reset all GSAP properties
+            gsap.set(featureList.querySelectorAll('li'), {
+                clearProps: "all"
+            });
+            
+            // Reverse circle animation
+            gsap.timeline()
+                .to(circle, {
+                    opacity: 0.8,
+                    duration: 0.1
+                })
+                .to(circle, {
+                    top: `${buttonRect.top - cardRect.top + buttonRect.height/2}px`,
+                    left: `${buttonRect.left - cardRect.left + buttonRect.width/2}px`,
+                    scale: 1,
+                    duration: 1,
+                    ease: "power2.inOut"
+                })
+                .to(circle, {
+                    opacity: 0,
+                    duration: 0.3,
+                    onComplete: () => circle.remove()
+                });
+        }
+    });
+}
+
+function resetCard(card) {
+    const button = card.querySelector('.magic-button');
+    const featureList = card.querySelector('.feature-list');
+    const circles = card.querySelectorAll('.animation-circle');
+    
+    // Remove any lingering circles
+    circles.forEach(circle => circle.remove());
+    
+    // Reset button state
+    button.classList.remove('active');
+    button.textContent = 'Magic';
+    
+    // Reset feature list
+    featureList.classList.remove('visible');
+    featureList.style.display = 'none';
+    
+    // Reset list items
+    const listItems = featureList.querySelectorAll('li');
+    gsap.set(listItems, {
+        opacity: 0,
+        x: -50
+    });
+}
+
+
 
 
 
@@ -346,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initFeaturesAnimations();
 
-    initFeatureListAnimations()
+    initFeatureListAnimations();
     
     initCrossPlatformAnimations();
 
