@@ -431,7 +431,6 @@ function resetCard(card) {
 
 
 
-
 // Initialize all animations when page loads
 document.addEventListener('DOMContentLoaded', () => {
     // Register GSAP ScrollTrigger Plugin
@@ -459,6 +458,7 @@ window.initHeroAnimations = initHeroAnimations;
 window.initFeaturesAnimations = initFeaturesAnimations;
 window.initCrossPlatformAnimations = initCrossPlatformAnimations;
 window.initFeatureListAnimations = initFeatureListAnimations;
+
 
 
 // Smooth scroll for navigation
